@@ -1,0 +1,15 @@
+# IDE
+.vscode/
+
+# Logs
+*.log*
+yarn.lock
+package-lock.json
+
+# Misc
+node_modules
+coverage
+*.xml
+
+# Dist
+*.gz

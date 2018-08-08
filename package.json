@@ -1,0 +1,29 @@
+{
+  "name": "testmatrix",
+  "description": "Declarative test runner for JavaScript.",
+  "version": "0.1.2",
+  "main": "index.js",
+  "bin": "bin/testmatrix",
+  "license": "MIT",
+  "repository": "jorgebucaran/testmatrix",
+  "author": "Jorge Bucaran",
+  "files": [
+    "index.js",
+    "bin/testmatrix"
+  ],
+  "keywords": [
+    "testmatrix",
+    "test",
+    "tap"
+  ],
+  "scripts": {
+    "test": "nyc -r lcov bin/testmatrix test/test.js && nyc report",
+    "release": "npm test && git commit -am $npm_package_version && git tag $npm_package_version && git push origin master && git push --tags && npm publish"
+  },
+  "nyc": {
+    "temp-directory": "./coverage/.nyc_output"
+  },
+  "devDependencies": {
+    "nyc": "^12.0.2"
+  }
+}

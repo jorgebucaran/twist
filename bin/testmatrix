@@ -1,0 +1,97 @@
+#!/usr/bin/env node
+
+"use strict"
+
+const cwd = process.cwd()
+const files = process.argv.slice(2)
+const resolve = require("path").resolve
+
+let index = 0
+let total = 0
+let failed = 0
+let suites = []
+
+setTimeout(function next() {
+  if (suites[index].count === suites[index].tests.length) {
+    const tests = suites[index].tests
+
+    if (index === 0) console.log("TAP version 13")
+
+    console.log("# " + suites[index].name)
+
+    for (let i = 0; i < tests.length; i++) {
+      const test = tests[i]
+
+      if (test.passed) {
+        console.log("ok " + (total + 1) + " " + test.name)
+      } else {
+        console.log("not ok " + (total + 1) + " " + test.name)
+        console.log("  ---")
+        console.log("    operator: " + test.operator)
+        console.log("    expected: " + JSON.stringify(test.expected))
+        console.log("    actual:   " + JSON.stringify(test.actual))
+        console.log(
+          "    at: " +
+            test.stack
+              .split("\n")[2]
+              .replace(/^ *at/, "")
+              .trim()
+        )
+        console.log("  ...")
+      }
+      total++
+    }
+    index++
+  }
+
+  if (index < suites.length) return setTimeout(next)
+
+  console.log("\n1.." + total)
+  console.log("# tests " + total)
+  console.log("# pass " + (total - failed))
+
+  if (failed === 0) {
+    console.log("\n# ok")
+  } else {
+    console.log("# fail " + failed)
+  }
+
+  process.exit(failed)
+})
+
+for (let i = 0; i < files.length; i++) {
+  const suite = require(resolve(cwd, files[i])).default
+
+  for (let k = 0, names = Object.keys(suite); k < names.length; k++) {
+    const tests = suite[names[k]]
+    const index = suites.push({
+      name: names[k],
+      tests: [],
+      count: tests.length
+    })
+
+    for (let t = 0; t < tests.length; t++) {
+      const done = actual => {
+        const passed = test.assert(actual, test.expected)
+
+        if (!passed) failed++
+
+        suites[index - 1].tests.push({
+          name: test.name || "",
+          stack: passed ? null : new Error().stack,
+          passed: passed,
+          actual: actual,
+          expected: test.expected,
+          operator: test.assert.name
+        })
+      }
+      const test = tests[t]
+
+      if (typeof test.actual === "function") {
+        test.actual(done)
+      } else {
+        done(test.actual)
+      }
+    }
+  }
+}
