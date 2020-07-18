@@ -1,0 +1,13 @@
+.DS_STORE
+.idea/
+.vscode/
+
+*.gz
+*.br
+*.log*
+*.xml
+
+samples
+coverage
+node_modules
+package-lock.json

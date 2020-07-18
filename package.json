@@ -1,0 +1,30 @@
+{
+  "name": "twist",
+  "description": "",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "index.js",
+  "bin": "bin/twist.js",
+  "license": "MIT",
+  "repository": "jorgebucaran/twist",
+  "author": "Jorge Bucaran",
+  "files": [
+    "{*.js,bin,lib}"
+  ],
+  "scripts": {
+    "test": "bin/twist.js test/*.test.js",
+    "release": "npm test && git commit -am $npm_package_version && git tag $npm_package_version && git push origin master && git push --tags && npm publish"
+  },
+  "dependencies": {
+    "colorette": "*"
+  },
+  "devDependencies": {
+    "c8": "*"
+  },
+  "keywords": [
+    "twist",
+    "assert",
+    "runner",
+    "test"
+  ]
+}
