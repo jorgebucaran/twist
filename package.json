@@ -1,29 +1,30 @@
 {
-  "name": "testmatrix",
-  "description": "Declarative test runner for JavaScript.",
-  "version": "0.1.2",
+  "name": "twist",
+  "description": "",
+  "version": "0.0.1",
+  "type": "module",
   "main": "index.js",
-  "bin": "bin/testmatrix",
+  "bin": "bin/twist.js",
   "license": "MIT",
-  "repository": "jorgebucaran/testmatrix",
+  "repository": "jorgebucaran/twist",
   "author": "Jorge Bucaran",
   "files": [
-    "index.js",
-    "bin/testmatrix"
-  ],
-  "keywords": [
-    "testmatrix",
-    "test",
-    "tap"
+    "{*.js,bin,lib}"
   ],
   "scripts": {
-    "test": "nyc -r lcov bin/testmatrix test/test.js && nyc report",
+    "test": "bin/twist.js test/*.test.js",
     "release": "npm test && git commit -am $npm_package_version && git tag $npm_package_version && git push origin master && git push --tags && npm publish"
   },
-  "nyc": {
-    "temp-directory": "./coverage/.nyc_output"
+  "dependencies": {
+    "colorette": "*"
   },
   "devDependencies": {
-    "nyc": "^12.0.2"
-  }
+    "c8": "*"
+  },
+  "keywords": [
+    "twist",
+    "assert",
+    "runner",
+    "test"
+  ]
 }
