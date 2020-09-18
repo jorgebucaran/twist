@@ -1,5 +1,4 @@
 export const Init = {
-  type: "init",
   props: {
     home: "/twist",
     time: [Infinity, Infinity],
@@ -38,7 +37,6 @@ export const Init = {
 }
 
 export const Run = {
-  type: "run",
   props: {
     time: [42, 0],
     code: "super",
@@ -126,7 +124,6 @@ export const Run = {
 }
 
 export const Done = {
-  type: "done",
   props: {
     file: "/twist/super.js",
   },
@@ -168,7 +165,6 @@ export const Done = {
 }
 
 export const Error = {
-  type: "error",
   props: Infinity,
   state: Infinity,
 }
