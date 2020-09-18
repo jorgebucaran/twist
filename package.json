@@ -12,7 +12,7 @@
     "{*.js,bin,lib}"
   ],
   "scripts": {
-    "test": "bin/twist.js test/*.test.js",
+    "test": "c8 bin/twist.js test/*.test.js",
     "release": "npm test && git commit -am $npm_package_version && git tag $npm_package_version && git push origin master && git push --tags && npm publish"
   },
   "dependencies": {

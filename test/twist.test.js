@@ -1,7 +1,7 @@
 import { dirname } from "path"
 import { fileURLToPath } from "url"
 import { spawnSync } from "child_process"
-import { t, deepEqual, equal } from "../index.js"
+import { t, deepEqual } from "../index.js"
 
 export default [
   t("bin/twist", [
@@ -11,7 +11,7 @@ export default [
         encoding: "utf8",
       })
         .stdout.split("\n")
-        .filter((x) => x)
+        .filter((any) => any)
         .map(JSON.parse)
         .map(({ suites: [{ ok, done }], failed }, i) =>
           deepEqual(

@@ -4,24 +4,33 @@ import { homedir } from "os"
 import { resolve } from "path"
 import { readFileSync } from "fs"
 import { run } from "../index.js"
-import { emit } from "../lib/index.js"
+import { subscribe } from "../lib/state.js"
+import * as Msg from "../lib/update.js"
+import view from "../lib/view.js"
 
-const { code, time, files } = emit("init", {
+const CLS = `\x1b[2J\x1b[${process.platform === "win32" ? "0f" : "3J\x1b[H"}`
+
+const dispatch = subscribe(
+  process.stdout.isTTY || process.env.CI
+    ? (state) => process._rawDebug(CLS + view(state))
+    : (state) => process.stdout.write(JSON.stringify(state) + "\n")
+)
+
+const { code, time, files } = dispatch(Msg.Init, {
   code: {},
   home: homedir(),
   time: process.hrtime(),
   files: process.argv
     .slice(2)
-    .filter((file, i, files) => i === files.indexOf(file))
-    .map((file) => resolve(file)),
+    .filter((file, i, files) => i === files.indexOf(file)),
 })
 
 Promise.all(
   files.map((file) =>
-    import(file)
+    import(resolve(file))
       .then(({ default: suite }) =>
         run(suite, (test) =>
-          emit("run", {
+          dispatch(Msg.Run, {
             test,
             file,
             time: process.hrtime(time),
@@ -31,7 +40,7 @@ Promise.all(
           })
         )
       )
-      .then(() => emit("done", { file }))
-      .catch((error) => emit("error", { file, error }) && process.exit(1))
+      .then(() => dispatch(Msg.Done, { file }))
+      .catch((error) => dispatch(Msg.Error, { file, error }) && process.exit(1))
   )
-)
+).then(() => process.exit(0))
