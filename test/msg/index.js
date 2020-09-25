@@ -5,6 +5,7 @@ export const Init = {
     files: ["/twist/super.js", "/twist/ultra.js"],
   },
   state: {
+    exit: false,
     time: [0, 0],
     failed: 0,
     passed: 0,
@@ -44,6 +45,7 @@ export const Run = {
     test: { name: "duper", error: null },
   },
   state: {
+    exit: false,
     time: [42, 0],
     failed: 0,
     passed: 1,
@@ -86,6 +88,7 @@ export const Run = {
       test: { name: "pop", error: {} },
     },
     state: {
+      exit: false,
       time: [42, 42],
       failed: 1,
       passed: 1,
@@ -128,6 +131,7 @@ export const Done = {
     file: "/twist/super.js",
   },
   state: {
+    exit: false,
     time: [42, 42],
     failed: 1,
     passed: 1,
@@ -167,4 +171,11 @@ export const Done = {
 export const Error = {
   props: Infinity,
   state: Infinity,
+}
+
+export const Exit = {
+  state: {
+    ...Done.state,
+    exit: true,
+  },
 }
