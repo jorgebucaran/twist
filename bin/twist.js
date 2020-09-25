@@ -11,7 +11,9 @@ import view from "../lib/view.js"
 const CLS = `\x1b[2J\x1b[${process.platform === "win32" ? "0f" : "3J\x1b[H"}`
 
 const dispatch = subscribe((state) =>
-  process.env.CI && !state.exit ? "" : process._rawDebug(CLS + view(state))
+  (process.env.CI && state.exit) || !process.env.CI
+    ? process._rawDebug(CLS + view(state))
+    : ""
 )
 
 const { code, time, files } = dispatch(Msg.Init, {
