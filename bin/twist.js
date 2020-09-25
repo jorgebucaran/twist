@@ -10,10 +10,8 @@ import view from "../lib/view.js"
 
 const CLS = `\x1b[2J\x1b[${process.platform === "win32" ? "0f" : "3J\x1b[H"}`
 
-const dispatch = subscribe(
-  process.stdout.isTTY || process.env.CI
-    ? (state) => process._rawDebug(CLS + view(state))
-    : (state) => process.stdout.write(JSON.stringify(state) + "\n")
+const dispatch = subscribe((state) =>
+  process.env.CI && !state.exit ? "" : process._rawDebug(CLS + view(state))
 )
 
 const { code, time, files } = dispatch(Msg.Init, {
@@ -43,4 +41,4 @@ Promise.all(
       .then(() => dispatch(Msg.Done, { file }))
       .catch((error) => dispatch(Msg.Error, { file, error }) && process.exit(1))
   )
-).then(() => process.exit(0))
+).then(() => dispatch(Msg.Exit) && process.exit(0))
