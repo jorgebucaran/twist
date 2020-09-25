@@ -1,7 +1,7 @@
 import { t, deepEqual } from "../index.js"
 
 import * as Msg from "./msg/index.js"
-import { Init, Run, Done, Error } from "../lib/update.js"
+import { Init, Run, Done, Error, Exit } from "../lib/update.js"
 
 export default [
   t("lib/update", [
@@ -19,6 +19,11 @@ export default [
     t("done", [
       t("mark a suite as complete", [
         deepEqual(Done(Msg.Run.next.state, Msg.Done.props), Msg.Done.state),
+      ]),
+    ]),
+    t("exit", [
+      t("exit twist", [
+        deepEqual(Exit(Msg.Done.state), Msg.Exit.state),
       ]),
     ]),
     t("error", [
