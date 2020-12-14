@@ -1,7 +1,7 @@
 {
   "name": "twist",
   "description": "Declarative testing for JavaScript.",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "main": "index.js",
   "bin": "bin/twist.js",
