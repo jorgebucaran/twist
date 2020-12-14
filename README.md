@@ -1,5 +1,7 @@
 # Twist
 
+> Declarative testing for JavaScript.
+
 ```js
 import { t, equal } from "twist"
 
