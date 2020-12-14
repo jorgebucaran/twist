@@ -1,5 +1,3 @@
-<a name="twist"></a>
-
 # Twist
 
 ```js
