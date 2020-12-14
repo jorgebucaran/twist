@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "test": "c8 bin/twist.js test/*.test.js",
-    "release": "npm test && git commit -am $npm_package_version && git tag -s $npm_package_version -m $npm_package_version && git push origin master && git push --tags && npm publish"
+    "release": "npm test && git commit -am $npm_package_version && git tag -s $npm_package_version -m $npm_package_version && git push origin main && git push --tags && npm publish"
   },
   "dependencies": {
     "colorette": "*"
