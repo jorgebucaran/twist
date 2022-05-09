@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { argv, hrtime, exit, platform, _rawDebug as log } from "process"
 import { homedir } from "os"
 import { resolve } from "path"
 import { readFileSync } from "fs"
@@ -8,22 +9,18 @@ import { subscribe } from "../lib/state.js"
 import * as Msg from "../lib/update.js"
 import view from "../lib/view.js"
 
-const CLS = `\x1b[2J\x1b[${process.platform === "win32" ? "0f" : "3J\x1b[H"}`
+// const CLS = `\x1b[2J\x1b[${platform === "win32" ? "0f" : "3J\x1b[H"}`
+const CLS = `\x1b[H\E[2J`
 
-const dispatch = subscribe((state) =>
-  (process.env.CI && state.exit) || !process.env.CI
-    ? process._rawDebug(CLS + view(state))
-    : ""
-)
+const dispatch = subscribe((state) => log(CLS + view(state)))
 
-const { code, time, files } = dispatch(Msg.Init, {
-  code: {},
+const { home, time, files } = {
   home: homedir(),
-  time: process.hrtime(),
-  files: process.argv
-    .slice(2)
-    .filter((file, i, files) => i === files.indexOf(file)),
-})
+  time: hrtime(),
+  files: argv.slice(2).filter((file, i, files) => i === files.indexOf(file)),
+}
+
+dispatch(Msg.Init, { home, time, files })
 
 Promise.all(
   files.map((file) =>
@@ -33,14 +30,15 @@ Promise.all(
           dispatch(Msg.Run, {
             test,
             file,
-            time: process.hrtime(time),
-            code:
-              (test.error && code[file]) ||
-              (code[file] = readFileSync(file, "utf8")),
+            time: hrtime(time),
+            code: readFileSync(file, "utf8"),
           })
         )
       )
       .then(() => dispatch(Msg.Done, { file }))
-      .catch((error) => dispatch(Msg.Error, { file, error }) && process.exit(1))
+      .catch((error) => (dispatch(Msg.Error, error), exit(1)))
   )
-).then(() => dispatch(Msg.Exit) && process.exit(0))
+).then(() => {
+  dispatch(Msg.Exit)
+  exit(0)
+})
